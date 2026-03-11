@@ -3,22 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exam Timetable</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>300L EEE Exam Timetable</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d0f14;
-    --surface: #13161e;
-    --card: #181c27;
-    --border: #252a3a;
-    --accent: #f0c040;
-    --accent2: #5b8fff;
-    --accent3: #ff6b6b;
-    --text: #e8eaf0;
-    --muted: #6b7280;
-    --morn: #34d399;
-    --aft: #60a5fa;
-    --even: #f472b6;
+    --bg: #f5f0e8;
+    --card-bg: #fffcf6;
+    --border: #e8dfc8;
+    --text: #1a1508;
+    --muted: #8a7d62;
+    --morn-bg: #fff7e6;
+    --morn-clr: #c47d00;
+    --morn-border: #f5c842;
+    --aft-bg: #eaf4ff;
+    --aft-clr: #1d6fb5;
+    --aft-border: #5aaaf0;
+    --even-bg: #f3edff;
+    --even-clr: #6b3fc0;
+    --even-border: #a87ef5;
+    --my-accent: #e03c3c;
+    --radius: 16px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,396 +30,536 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
     min-height: 100vh;
-    padding: 40px 20px;
-    position: relative;
-    overflow-x: hidden;
+    padding-bottom: 60px;
   }
 
-  /* Background grid */
   body::before {
     content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(91,143,255,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(91,143,255,0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
+    position: fixed; inset: 0; opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 999;
   }
 
-  .glow-orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(120px);
-    pointer-events: none;
-    z-index: 0;
+  /* HERO */
+  .hero {
+    background: var(--text); color: var(--bg);
+    padding: 36px 20px 28px;
+    position: relative; overflow: hidden;
   }
-  .orb1 { width: 400px; height: 400px; background: rgba(91,143,255,0.12); top: -100px; right: -100px; }
-  .orb2 { width: 300px; height: 300px; background: rgba(240,192,64,0.08); bottom: 0; left: -80px; }
-
-  .container {
-    max-width: 720px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
+  .hero::after {
+    content: '300L';
+    position: absolute; right: -10px; top: -10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 100px; font-weight: 800;
+    opacity: 0.06; color: white; line-height: 1;
+    pointer-events: none; user-select: none;
   }
-
-  header {
-    text-align: center;
-    margin-bottom: 48px;
-    animation: fadeDown 0.6s ease both;
+  .hero-tag {
+    display: inline-block;
+    background: var(--my-accent); color: white;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 20px; margin-bottom: 12px;
   }
-
-  .label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.3em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 12px;
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.7rem, 7vw, 2.4rem);
+    font-weight: 800; line-height: 1.1; margin-bottom: 6px;
   }
+  .hero p { font-size: 13px; color: rgba(245,240,232,0.55); font-weight: 300; }
 
-  h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.4rem, 6vw, 3.8rem);
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    background: linear-gradient(135deg, #fff 30%, #a0b4d6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  /* BANNER */
+  .countdown-bar {
+    background: var(--morn-bg);
+    border-bottom: 1px solid var(--morn-border);
+    padding: 12px 20px;
+    display: flex; align-items: center; gap: 10px;
   }
+  .countdown-bar .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--my-accent);
+    animation: pulse 1.4s infinite; flex-shrink: 0;
+  }
+  .countdown-bar span { font-size: 13px; font-weight: 500; color: var(--morn-clr); }
 
-  .subtitle {
-    margin-top: 10px;
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 300;
-    letter-spacing: 0.05em;
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:0.4; transform:scale(0.7); }
   }
 
-  /* Legend */
-  .legend {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 36px;
-    flex-wrap: wrap;
-    animation: fadeUp 0.6s 0.2s ease both;
+  /* SUMMARY — 2 items */
+  .summary {
+    display: grid; grid-template-columns: repeat(2,1fr);
+    gap: 1px; background: var(--border);
+    margin: 20px 16px 0; border-radius: 14px;
+    overflow: hidden; border: 1px solid var(--border);
+  }
+  .summary-item { background: var(--card-bg); padding: 14px 10px; text-align: center; }
+  .summary-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px; font-weight: 800; line-height: 1; color: var(--text);
+  }
+  .summary-lbl {
+    font-size: 10px; color: var(--muted);
+    margin-top: 3px; font-weight: 500;
+    letter-spacing: 0.05em; text-transform: uppercase;
   }
 
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-  }
+  /* LEGEND */
+  .legend { display: flex; gap: 10px; padding: 16px 20px 8px; flex-wrap: wrap; }
+  .leg { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; color: var(--muted); }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-  .legend-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
+  /* MONTH LABEL */
+  .month-label { display: flex; align-items: center; gap: 10px; padding: 20px 20px 8px; }
+  .month-label span {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted);
   }
+  .month-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* Table */
-  .table-wrap {
-    background: var(--card);
+  /* CARDS */
+  .cards { display: flex; flex-direction: column; gap: 12px; padding: 4px 16px; }
+
+  .card {
+    background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    animation: fadeUp 0.6s 0.3s ease both;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
-  }
-
-  .table-header {
-    display: grid;
-    grid-template-columns: 160px 1fr 1fr 1fr;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 20px;
-  }
-
-  .th {
-    padding: 14px 12px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .row {
-    display: grid;
-    grid-template-columns: 160px 1fr 1fr 1fr;
-    border-bottom: 1px solid var(--border);
-    padding: 0 20px;
-    transition: background 0.2s;
-    animation: slideIn 0.4s ease both;
-  }
-
-  .row:last-child { border-bottom: none; }
-  .row:hover { background: rgba(255,255,255,0.025); }
-
-  .cell {
-    padding: 18px 12px;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-  }
-
-  .date-cell {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 3px;
-  }
-
-  .day-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .date-str {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  .course-chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    border: 1px solid;
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    animation: slideUp 0.5s ease both;
     transition: transform 0.15s, box-shadow 0.15s;
   }
+  .card:active { transform: scale(0.98); }
+  .card.done { opacity: 0.45; filter: grayscale(0.5); }
 
-  .course-chip:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  .card-top { display: flex; align-items: stretch; }
+  .card-stripe { width: 5px; flex-shrink: 0; }
+  .stripe-morn { background: var(--morn-border); }
+  .stripe-aft  { background: var(--aft-border); }
+  .stripe-even { background: var(--even-border); }
+
+  .card-body { flex: 1; padding: 14px 16px 14px 14px; }
+
+  .card-meta {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; margin-bottom: 10px;
   }
+  .date-group { display: flex; flex-direction: column; gap: 2px; }
+  .day-name { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); line-height: 1; }
+  .date-str  { font-size: 11px; color: var(--muted); font-weight: 400; letter-spacing: 0.05em; }
 
-  .chip-morn {
-    color: var(--morn);
-    background: rgba(52,211,153,0.08);
-    border-color: rgba(52,211,153,0.25);
+  .session-badge {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 20px; border: 1px solid;
   }
+  .badge-morn { color:var(--morn-clr); background:var(--morn-bg); border-color:var(--morn-border); }
+  .badge-aft  { color:var(--aft-clr);  background:var(--aft-bg);  border-color:var(--aft-border); }
+  .badge-even { color:var(--even-clr); background:var(--even-bg); border-color:var(--even-border); }
 
-  .chip-aft {
-    color: var(--aft);
-    background: rgba(96,165,250,0.08);
-    border-color: rgba(96,165,250,0.25);
+  .course-row {
+    display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 8px;
   }
-
-  .chip-even {
-    color: var(--even);
-    background: rgba(244,114,182,0.08);
-    border-color: rgba(244,114,182,0.25);
+  .course-code {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px; font-weight: 800; color: var(--text); letter-spacing: -0.01em;
   }
+  .time-pill {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 500; color: var(--muted);
+    background: rgba(0,0,0,0.04);
+    padding: 5px 10px; border-radius: 10px; white-space: nowrap;
+  }
+  .time-pill svg { width: 12px; height: 12px; flex-shrink: 0; }
 
-  /* Month dividers */
-  .month-divider {
+  /* ── PER-CARD COUNTDOWN TIMER ── */
+  .card-timer {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
     display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 32px;
-    background: rgba(240,192,64,0.04);
-    border-bottom: 1px solid var(--border);
+    gap: 6px;
   }
 
-  .month-divider span {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-
-  .month-line {
+  .t-block {
     flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, rgba(240,192,64,0.3), transparent);
+    display: flex; flex-direction: column; align-items: center;
+    background: rgba(0,0,0,0.04);
+    border-radius: 10px;
+    padding: 8px 4px 6px;
+    min-width: 0;
+    transition: background 0.3s;
   }
 
-  /* Animations */
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateX(-10px); }
-    to   { opacity: 1; transform: translateX(0); }
+  .t-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px; font-weight: 800; line-height: 1;
+    color: var(--text); letter-spacing: -0.02em;
+    transition: color 0.3s;
   }
 
-  .row:nth-child(1)  { animation-delay: 0.35s; }
-  .row:nth-child(2)  { animation-delay: 0.40s; }
-  .row:nth-child(3)  { animation-delay: 0.45s; }
-  .row:nth-child(4)  { animation-delay: 0.50s; }
-  .row:nth-child(5)  { animation-delay: 0.55s; }
-  .row:nth-child(6)  { animation-delay: 0.60s; }
-  .row:nth-child(7)  { animation-delay: 0.65s; }
-  .row:nth-child(8)  { animation-delay: 0.70s; }
-  .row:nth-child(9)  { animation-delay: 0.75s; }
+  .t-lbl {
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-top: 3px;
+  }
 
-  footer {
-    text-align: center;
-    margin-top: 32px;
-    color: var(--muted);
-    font-size: 12px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.1em;
-    animation: fadeUp 0.6s 0.8s ease both;
+  /* Urgent styling < 24h */
+  .card-timer.urgent .t-block { background: rgba(224,60,60,0.09); }
+  .card-timer.urgent .t-num  { color: var(--my-accent); }
+
+  /* Done label replacing timer */
+  .done-label {
+    margin-top: 12px; padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 12px; font-weight: 600;
+    color: var(--muted); text-align: center;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  .my-tag {
+    font-size: 10px; font-weight: 600;
+    color: var(--my-accent); letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .my-tag::before { content: '★'; font-size: 9px; }
+
+  /* stagger */
+  .card:nth-child(1){animation-delay:.05s}
+  .card:nth-child(2){animation-delay:.10s}
+  .card:nth-child(3){animation-delay:.15s}
+  .card:nth-child(4){animation-delay:.20s}
+  .card:nth-child(5){animation-delay:.25s}
+  .card:nth-child(6){animation-delay:.30s}
+
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .footer {
+    text-align: center; padding: 36px 20px 20px;
+    color: var(--muted); font-size: 12px; line-height: 1.8;
+  }
+  .footer strong {
+    display: block; font-family: 'Syne', sans-serif;
+    font-size: 14px; color: var(--text); margin-bottom: 4px;
+  }
+
+  @media (min-width: 600px) {
+    .cards, .legend, .month-label, .footer { max-width:540px; margin-left:auto; margin-right:auto; }
+    .cards       { padding: 4px 24px; }
+    .legend      { padding: 16px 24px 8px; }
+    .month-label { padding: 20px 24px 8px; }
+    .summary     { max-width:540px; margin:20px auto 0; }
   }
 </style>
 </head>
 <body>
 
-<div class="glow-orb orb1"></div>
-<div class="glow-orb orb2"></div>
+<div class="hero">
+  <div class="hero-tag">UNIBEN · Faculty of Engineering</div>
+  <h1>Exam<br>Timetable</h1>
+  <p>300L Electrical Engineering &nbsp;·&nbsp; 2025/2026 Session</p>
+</div>
 
-<div class="container">
+<div class="countdown-bar">
+  <div class="pulse"></div>
+  <span id="next-exam-text">Loading…</span>
+</div>
 
-  <header>
-    <p class="label">Academic Schedule</p>
-    <h1>Exam Timetable</h1>
-    <p class="subtitle">March – April 2026</p>
-  </header>
+<div class="summary">
+  <div class="summary-item">
+    <div class="summary-num">9</div>
+    <div class="summary-lbl">Courses</div>
+  </div>
+  <div class="summary-item">
+    <div class="summary-num">3</div>
+    <div class="summary-lbl">Weeks</div>
+  </div>
+</div>
 
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:var(--morn)"></div> Morning</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--aft)"></div> Afternoon</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--even)"></div> Evening</div>
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:var(--morn-border)"></div> Morning 8:30–11:30</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--aft-border)"></div> Afternoon 12:00–3:00</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--even-border)"></div> Evening 3:30–6:30</div>
+</div>
+
+<!-- MARCH -->
+<div class="month-label"><span>March 2026</span></div>
+<div class="cards">
+
+  <div class="card" data-exam="2026-03-16T12:00:00">
+    <div class="card-top"><div class="card-stripe stripe-aft"></div>
+    <div class="card-body">
+      <div class="my-tag">Your Exam</div>
+      <div class="card-meta">
+        <div class="date-group"><span class="day-name">Monday</span><span class="date-str">16 March 2026</span></div>
+        <span class="session-badge badge-aft">Afternoon</span>
+      </div>
+      <div class="course-row">
+        <span class="course-code">EEE 373</span>
+        <span class="time-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>12:00 PM – 3:00 PM</span>
+      </div>
+      <div class="card-timer">
+        <div class="t-block"><div class="t-num" data-u="d">--</div><div class="t-lbl">Days</div></div>
+        <div class="t-block"><div class="t-num" data-u="h">--</div><div class="t-lbl">Hrs</div></div>
+        <div class="t-block"><div class="t-num" data-u="m">--</div><div class="t-lbl">Mins</div></div>
+        <div class="t-block"><div class="t-num" data-u="s">--</div><div class="t-lbl">Secs</div></div>
+      </div>
+    </div></div>
   </div>
 
-  <div class="table-wrap">
-
-    <div class="table-header">
-      <div class="th">Date</div>
-      <div class="th">Morning</div>
-      <div class="th">Afternoon</div>
-      <div class="th">Evening</div>
-    </div>
-
-    <!-- MARCH -->
-    <div class="month-divider">
-      <span>March</span>
-      <div class="month-line"></div>
-    </div>
-
-    <div class="row">
-      <div class="cell date-cell">
-        <span class="day-name">Monday</span>
-        <span class="date-str">16 / 03</span>
+  <div class="card" data-exam="2026-03-18T12:00:00">
+    <div class="card-top"><div class="card-stripe stripe-aft"></div>
+    <div class="card-body">
+      <div class="my-tag">Your Exam</div>
+      <div class="card-meta">
+        <div class="date-group"><span class="day-name">Wednesday</span><span class="date-str">18 March 2026</span></div>
+        <span class="session-badge badge-aft">Afternoon</span>
       </div>
-      <div class="cell">—</div>
-      <div class="cell"><span class="course-chip chip-aft">EEE 373</span></div>
-      <div class="cell">—</div>
-    </div>
-
-    <div class="row">
-      <div class="cell date-cell">
-        <span class="day-name">Wednesday</span>
-        <span class="date-str">18 / 03</span>
+      <div class="course-row">
+        <span class="course-code">GET 305</span>
+        <span class="time-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>12:00 PM – 3:00 PM</span>
       </div>
-      <div class="cell">—</div>
-      <div class="cell"><span class="course-chip chip-aft">GET 305</span></div>
-      <div class="cell">—</div>
-    </div>
-
-    <div class="row">
-      <div class="cell date-cell">
-        <span class="day-name">Tuesday</span>
-        <span class="date-str">24 / 03</span>
+      <div class="card-timer">
+        <div class="t-block"><div class="t-num" data-u="d">--</div><div class="t-lbl">Days</div></div>
+        <div class="t-block"><div class="t-num" data-u="h">--</div><div class="t-lbl">Hrs</div></div>
+        <div class="t-block"><div class="t-num" data-u="m">--</div><div class="t-lbl">Mins</div></div>
+        <div class="t-block"><div class="t-num" data-u="s">--</div><div class="t-lbl">Secs</div></div>
       </div>
-      <div class="cell">—</div>
-      <div class="cell"><span class="course-chip chip-aft">EEE 311</span></div>
-      <div class="cell">—</div>
-    </div>
-
-    <div class="row">
-      <div class="cell date-cell">
-        <span class="day-name">Wednesday</span>
-        <span class="date-str">25 / 03</span>
-      </div>
-      <div class="cell">—</div>
-      <div class="cell">—</div>
-      <div class="cell"><span class="course-chip chip-even">GET 309</span></div>
-    </div>
-
-    <div class="row">
-      <div class="cell date-cell">
-        <span class="day-name">Friday</span>
-        <span class="date-str">27 / 03</span>
-      </div>
-      <div class="cell"><span class="course-chip chip-morn">GET 301</span></div>
-      <div class="cell">—</div>
-      <div class="cell">—</div>
-    </div>
-
-    <div class="row">
-      <div class="cell date-cell">
-        <span class="day-name">Monday</span>
-        <span class="date-str">30 / 03</span>
-      </div>
-      <div class="cell">—</div>
-      <div class="cell"><span class="course-chip chip-aft">EEE 331</span></div>
-      <div class="cell">—</div>
-    </div>
-
-    <!-- APRIL -->
-    <div class="month-divider">
-      <span>April</span>
-      <div class="month-line"></div>
-    </div>
-
-    <div class="row">
-      <div class="cell date-cell">
-        <span class="day-name">Wednesday</span>
-        <span class="date-str">01 / 04</span>
-      </div>
-      <div class="cell">—</div>
-      <div class="cell"><span class="course-chip chip-aft">EEE 321</span></div>
-      <div class="cell">—</div>
-    </div>
-
-    <div class="row">
-      <div class="cell date-cell">
-        <span class="day-name">Tuesday</span>
-        <span class="date-str">07 / 04</span>
-      </div>
-      <div class="cell"><span class="course-chip chip-morn">GET 307</span></div>
-      <div class="cell">—</div>
-      <div class="cell">—</div>
-    </div>
-
-    <div class="row">
-      <div class="cell date-cell">
-        <span class="day-name">Wednesday</span>
-        <span class="date-str">08 / 04</span>
-      </div>
-      <div class="cell">—</div>
-      <div class="cell"><span class="course-chip chip-aft">GST 312</span></div>
-      <div class="cell">—</div>
-    </div>
-
+    </div></div>
   </div>
 
-  <footer>9 exams · 3 weeks · you've got this ✦</footer>
+  <div class="card" data-exam="2026-03-24T12:00:00">
+    <div class="card-top"><div class="card-stripe stripe-aft"></div>
+    <div class="card-body">
+      <div class="my-tag">Your Exam</div>
+      <div class="card-meta">
+        <div class="date-group"><span class="day-name">Tuesday</span><span class="date-str">24 March 2026</span></div>
+        <span class="session-badge badge-aft">Afternoon</span>
+      </div>
+      <div class="course-row">
+        <span class="course-code">EEE 311</span>
+        <span class="time-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>12:00 PM – 3:00 PM</span>
+      </div>
+      <div class="card-timer">
+        <div class="t-block"><div class="t-num" data-u="d">--</div><div class="t-lbl">Days</div></div>
+        <div class="t-block"><div class="t-num" data-u="h">--</div><div class="t-lbl">Hrs</div></div>
+        <div class="t-block"><div class="t-num" data-u="m">--</div><div class="t-lbl">Mins</div></div>
+        <div class="t-block"><div class="t-num" data-u="s">--</div><div class="t-lbl">Secs</div></div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="card" data-exam="2026-03-25T15:30:00">
+    <div class="card-top"><div class="card-stripe stripe-even"></div>
+    <div class="card-body">
+      <div class="my-tag">Your Exam</div>
+      <div class="card-meta">
+        <div class="date-group"><span class="day-name">Wednesday</span><span class="date-str">25 March 2026</span></div>
+        <span class="session-badge badge-even">Evening</span>
+      </div>
+      <div class="course-row">
+        <span class="course-code">GET 309</span>
+        <span class="time-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>3:30 PM – 6:30 PM</span>
+      </div>
+      <div class="card-timer">
+        <div class="t-block"><div class="t-num" data-u="d">--</div><div class="t-lbl">Days</div></div>
+        <div class="t-block"><div class="t-num" data-u="h">--</div><div class="t-lbl">Hrs</div></div>
+        <div class="t-block"><div class="t-num" data-u="m">--</div><div class="t-lbl">Mins</div></div>
+        <div class="t-block"><div class="t-num" data-u="s">--</div><div class="t-lbl">Secs</div></div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="card" data-exam="2026-03-27T08:30:00">
+    <div class="card-top"><div class="card-stripe stripe-morn"></div>
+    <div class="card-body">
+      <div class="my-tag">Your Exam</div>
+      <div class="card-meta">
+        <div class="date-group"><span class="day-name">Friday</span><span class="date-str">27 March 2026</span></div>
+        <span class="session-badge badge-morn">Morning</span>
+      </div>
+      <div class="course-row">
+        <span class="course-code">GET 301</span>
+        <span class="time-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>8:30 AM – 11:30 AM</span>
+      </div>
+      <div class="card-timer">
+        <div class="t-block"><div class="t-num" data-u="d">--</div><div class="t-lbl">Days</div></div>
+        <div class="t-block"><div class="t-num" data-u="h">--</div><div class="t-lbl">Hrs</div></div>
+        <div class="t-block"><div class="t-num" data-u="m">--</div><div class="t-lbl">Mins</div></div>
+        <div class="t-block"><div class="t-num" data-u="s">--</div><div class="t-lbl">Secs</div></div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="card" data-exam="2026-03-30T12:00:00">
+    <div class="card-top"><div class="card-stripe stripe-aft"></div>
+    <div class="card-body">
+      <div class="my-tag">Your Exam</div>
+      <div class="card-meta">
+        <div class="date-group"><span class="day-name">Monday</span><span class="date-str">30 March 2026</span></div>
+        <span class="session-badge badge-aft">Afternoon</span>
+      </div>
+      <div class="course-row">
+        <span class="course-code">EEE 331</span>
+        <span class="time-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>12:00 PM – 3:00 PM</span>
+      </div>
+      <div class="card-timer">
+        <div class="t-block"><div class="t-num" data-u="d">--</div><div class="t-lbl">Days</div></div>
+        <div class="t-block"><div class="t-num" data-u="h">--</div><div class="t-lbl">Hrs</div></div>
+        <div class="t-block"><div class="t-num" data-u="m">--</div><div class="t-lbl">Mins</div></div>
+        <div class="t-block"><div class="t-num" data-u="s">--</div><div class="t-lbl">Secs</div></div>
+      </div>
+    </div></div>
+  </div>
 
 </div>
+
+<!-- APRIL -->
+<div class="month-label"><span>April 2026</span></div>
+<div class="cards">
+
+  <div class="card" data-exam="2026-04-01T12:00:00">
+    <div class="card-top"><div class="card-stripe stripe-aft"></div>
+    <div class="card-body">
+      <div class="my-tag">Your Exam</div>
+      <div class="card-meta">
+        <div class="date-group"><span class="day-name">Wednesday</span><span class="date-str">1 April 2026</span></div>
+        <span class="session-badge badge-aft">Afternoon</span>
+      </div>
+      <div class="course-row">
+        <span class="course-code">EEE 321</span>
+        <span class="time-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>12:00 PM – 3:00 PM</span>
+      </div>
+      <div class="card-timer">
+        <div class="t-block"><div class="t-num" data-u="d">--</div><div class="t-lbl">Days</div></div>
+        <div class="t-block"><div class="t-num" data-u="h">--</div><div class="t-lbl">Hrs</div></div>
+        <div class="t-block"><div class="t-num" data-u="m">--</div><div class="t-lbl">Mins</div></div>
+        <div class="t-block"><div class="t-num" data-u="s">--</div><div class="t-lbl">Secs</div></div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="card" data-exam="2026-04-07T08:30:00">
+    <div class="card-top"><div class="card-stripe stripe-morn"></div>
+    <div class="card-body">
+      <div class="my-tag">Your Exam</div>
+      <div class="card-meta">
+        <div class="date-group"><span class="day-name">Tuesday</span><span class="date-str">7 April 2026</span></div>
+        <span class="session-badge badge-morn">Morning</span>
+      </div>
+      <div class="course-row">
+        <span class="course-code">GET 307</span>
+        <span class="time-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>8:30 AM – 11:30 AM</span>
+      </div>
+      <div class="card-timer">
+        <div class="t-block"><div class="t-num" data-u="d">--</div><div class="t-lbl">Days</div></div>
+        <div class="t-block"><div class="t-num" data-u="h">--</div><div class="t-lbl">Hrs</div></div>
+        <div class="t-block"><div class="t-num" data-u="m">--</div><div class="t-lbl">Mins</div></div>
+        <div class="t-block"><div class="t-num" data-u="s">--</div><div class="t-lbl">Secs</div></div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="card" data-exam="2026-04-08T12:00:00">
+    <div class="card-top"><div class="card-stripe stripe-aft"></div>
+    <div class="card-body">
+      <div class="my-tag">Your Exam</div>
+      <div class="card-meta">
+        <div class="date-group"><span class="day-name">Wednesday</span><span class="date-str">8 April 2026</span></div>
+        <span class="session-badge badge-aft">Afternoon</span>
+      </div>
+      <div class="course-row">
+        <span class="course-code">GST 312</span>
+        <span class="time-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>12:00 PM – 3:00 PM</span>
+      </div>
+      <div class="card-timer">
+        <div class="t-block"><div class="t-num" data-u="d">--</div><div class="t-lbl">Days</div></div>
+        <div class="t-block"><div class="t-num" data-u="h">--</div><div class="t-lbl">Hrs</div></div>
+        <div class="t-block"><div class="t-num" data-u="m">--</div><div class="t-lbl">Mins</div></div>
+        <div class="t-block"><div class="t-num" data-u="s">--</div><div class="t-lbl">Secs</div></div>
+      </div>
+    </div></div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <strong>University of Benin · Faculty of Engineering</strong>
+  First Semester Examinations · 2025/2026 Session<br>
+  <span style="color:var(--my-accent);font-weight:500">9 papers. One goal. You've got this 💪</span>
+</div>
+
+<script>
+  const cards = document.querySelectorAll('.card[data-exam]');
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function tick(){
+    const now = Date.now();
+    let nextMs = Infinity, nextCourse = '';
+
+    cards.forEach(card => {
+      const target = new Date(card.dataset.exam).getTime();
+      const diff   = target - now;
+      const timer  = card.querySelector('.card-timer');
+
+      if(diff <= 0){
+        card.classList.add('done');
+        if(timer && timer.querySelector('.t-block')){
+          timer.innerHTML = '<div class="done-label">✓ Completed</div>';
+        }
+        return;
+      }
+
+      card.classList.remove('done');
+
+      const s  = Math.floor(diff/1000);
+      const d  = Math.floor(s/86400);
+      const h  = Math.floor((s%86400)/3600);
+      const m  = Math.floor((s%3600)/60);
+      const sc = s%60;
+
+      timer.querySelectorAll('[data-u]').forEach(el => {
+        const u = el.dataset.u;
+        if(u==='d') el.textContent = d;
+        if(u==='h') el.textContent = pad(h);
+        if(u==='m') el.textContent = pad(m);
+        if(u==='s') el.textContent = pad(sc);
+      });
+
+      if(diff < 86400000) timer.classList.add('urgent');
+      else timer.classList.remove('urgent');
+
+      if(diff < nextMs){
+        nextMs = diff;
+        nextCourse = card.querySelector('.course-code').textContent.trim();
+      }
+    });
+
+    const banner = document.getElementById('next-exam-text');
+    if(!nextCourse){
+      banner.textContent = '🎉 All exams completed! Well done!';
+      return;
+    }
+    const d2 = Math.floor(nextMs/86400000);
+    const h2 = Math.floor((nextMs%86400000)/3600000);
+    const m2 = Math.floor((nextMs%3600000)/60000);
+    const s2 = Math.floor((nextMs%60000)/1000);
+    if(d2>0)      banner.textContent = `⏳ Next up: ${nextCourse} — ${d2}d ${pad(h2)}h ${pad(m2)}m`;
+    else if(h2>0) banner.textContent = `⚡ ${nextCourse} is TODAY — ${pad(h2)}h ${pad(m2)}m ${pad(s2)}s left!`;
+    else          banner.textContent = `🔔 ${nextCourse} starts in ${pad(m2)}m ${pad(s2)}s — GO!`;
+  }
+
+  tick();
+  setInterval(tick, 1000);
+</script>
 </body>
 </html>
